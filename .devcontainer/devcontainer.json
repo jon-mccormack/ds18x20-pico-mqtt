@@ -1,0 +1,21 @@
+{
+    "name": "Raspberry Pi Pico SDK DevContainer",
+    "dockerFile": "Dockerfile",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.cmake-tools",
+                "ms-vscode.cpptools-extension-pack"
+            ]
+        },
+        "settings": {
+            "terminal.integrated.defaultProfile.linux": "bash",
+            "terminal.integrated.profiles.linux": {
+                "bash": {
+                    "path": "/bin/bash"
+                }
+            }
+        }
+    }
+}
