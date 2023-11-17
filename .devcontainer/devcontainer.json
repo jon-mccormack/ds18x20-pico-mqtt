@@ -1,6 +1,9 @@
 {
     "name": "Raspberry Pi Pico SDK DevContainer",
     "dockerFile": "Dockerfile",
+    "runArgs": [
+        "--device=/dev/ttyACM0"
+    ],
     "customizations": {
         "vscode": {
             "extensions": [

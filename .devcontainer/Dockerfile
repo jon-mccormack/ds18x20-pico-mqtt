@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
   git \
   python3 \
   g++ \
+  minicom \
   && rm -rf /var/lib/apt/lists/*
 
 # Clone the Raspberry Pi Pico SDK repository
@@ -18,9 +19,3 @@ RUN cd pico-sdk && git submodule update --init
 
 # Set the PICO_SDK_PATH environment variable
 ENV PICO_SDK_PATH=/pico-sdk
-
-# Create a new directory for the build
-# RUN mkdir builds
-
-# Set the workdir to the build directory
-# WORKDIR /build
