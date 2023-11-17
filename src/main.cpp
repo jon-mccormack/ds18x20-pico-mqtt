@@ -4,6 +4,7 @@
 #include "hardware/gpio.h"
 
 // TODO: I want a vscode task which can build the project
+// i also want a task which launches minicom with the correct args for debugging
 
 int main()
 {
