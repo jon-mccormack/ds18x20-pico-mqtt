@@ -1,0 +1,25 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Configure CMake",
+			"command": "rm -rf build/ && mkdir build && cd build && cmake .."
+		},
+		{
+			"type": "shell",
+			"label": "Build",
+			"command": "cd build && cmake --build .",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"type": "shell",
+			"label": "Monitor Pico's USB serial output",
+			"command": "minicom -b 115200 -o -D /dev/ttyACM0"
+		}
+	]
+}
