@@ -4,8 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${env:PICO_SDK_PATH}/src/host/**",
-                "${env:PICO_SDK_PATH}/src/common/**",
+                "${env:PICO_SDK_PATH}/src/**",
+                "${env:PICO_SDK_PATH}/lib/**",
                 "${workspaceFolder}/build/generated/pico_base"
             ],
             "defines": [],

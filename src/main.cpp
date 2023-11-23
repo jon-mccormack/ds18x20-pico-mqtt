@@ -2,14 +2,34 @@
 #include "pico/stdlib.h"
 #include "one_wire.h"
 #include "hardware/gpio.h"
-
-// TODO: I want a vscode task which can build the project
-// i also want a task which launches minicom with the correct args for debugging
+#include "pico/cyw43_arch.h"
+#include "wifi.h"
 
 int main()
 {
     stdio_init_all();
-    One_wire one_wire(17); // GP15 - Pin 20 on Pi Pico
+
+    printf("Wifi ssid and password following:\n");
+
+    // printf(WIFI_SSID);
+    // printf(WIFI_PASSWORD);
+    // printf("\n");
+
+    if (cyw43_arch_init_with_country(CYW43_COUNTRY_UK))
+    {
+        printf("failed to initialise\n");
+        return 1;
+    }
+    printf("initialised\n");
+    cyw43_arch_enable_sta_mode();
+    if (cyw43_arch_wifi_connect_timeout_ms("help", "help", CYW43_AUTH_WPA2_AES_PSK, 10000))
+    {
+        printf("failed to connect\n");
+        return 1;
+    }
+    printf("connected\n");
+
+    One_wire one_wire(17);
     one_wire.init();
     rom_address_t address{};
     while (true)
