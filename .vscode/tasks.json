@@ -4,7 +4,7 @@
 		{
 			"type": "shell",
 			"label": "Configure CMake",
-			"command": "rm -rf build/ && mkdir build && cd build && cmake .."
+			"command": "rm -rf build/ && mkdir build && cd build && cmake -DWIFI_SSID=${WIFI_SSID} -DWIFI_PASSWORD=${WIFI_PASSWORD} .."
 		},
 		{
 			"type": "shell",

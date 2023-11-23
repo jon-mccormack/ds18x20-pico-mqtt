@@ -16,16 +16,29 @@ will fail if its unreachable.
 
 ## Building
 
-If using VS Code, you can run the "Configure CMake" task, followed by the
+If using VS Code, you should first define your Wifi configuration in
+`.vscode/settings.json` in the following way:
+
+```json
+{
+    "terminal.integrated.env.linux": {
+        "WIFI_SSID": "<ssid>",
+        "WIFI_PASSWORD": "<password>"
+    }
+}
+```
+
+Then, you can run the "Configure CMake" task, followed by the
 "Build" task which should create the binaries.
 
-Otherwise, run the following
+Otherwise, run the following, ensuring to emplace your Wifi's `ssid`
+and `password`.
 
 ```bash
 rm -rf build # Cleanup build dir if it already exists
 mkdir build
 cd build
-cmake ..
+cmake -DWIFI_SSID=<ssid> -DWIFI_PASSWORD=<password> ..
 cmake --build .
 ```
 

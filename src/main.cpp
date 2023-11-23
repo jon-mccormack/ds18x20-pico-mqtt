@@ -4,41 +4,56 @@
 #include "hardware/gpio.h"
 #include "pico/cyw43_arch.h"
 #include "wifi.h"
+#include <ostream>
 
-int main()
+void connectToWifi(const std::string &ssid, const std::string &password)
 {
-    stdio_init_all();
-
-    printf("Wifi ssid and password following:\n");
-
-    // printf(WIFI_SSID);
-    // printf(WIFI_PASSWORD);
-    // printf("\n");
+    printf(std::string("Launching using ssid " + ssid + " and password " + password + "\n").c_str());
 
     if (cyw43_arch_init_with_country(CYW43_COUNTRY_UK))
     {
-        printf("failed to initialise\n");
-        return 1;
+        throw std::runtime_error("Failed to initialise CYW43 Wifi chip");
     }
-    printf("initialised\n");
-    cyw43_arch_enable_sta_mode();
-    if (cyw43_arch_wifi_connect_timeout_ms("help", "help", CYW43_AUTH_WPA2_AES_PSK, 10000))
-    {
-        printf("failed to connect\n");
-        return 1;
-    }
-    printf("connected\n");
 
-    One_wire one_wire(17);
-    one_wire.init();
-    rom_address_t address{};
-    while (true)
+    cyw43_arch_enable_sta_mode();
+    if (cyw43_arch_wifi_connect_timeout_ms(DPM_WIFI_SSID, DPM_WIFI_PASSWORD, CYW43_AUTH_WPA2_AES_PSK, 10000))
     {
-        one_wire.single_device_read_rom(address);
-        printf("Device Address: %02x%02x%02x%02x%02x%02x%02x%02x\n", address.rom[0], address.rom[1], address.rom[2], address.rom[3], address.rom[4], address.rom[5], address.rom[6], address.rom[7]);
-        one_wire.convert_temperature(address, true, false);
-        printf("Temperature: %3.1foC\n", one_wire.temperature(address));
-        sleep_ms(1000);
+        throw std::runtime_error("Failed to connect to Wifi");
     }
-    return 0;
+    printf("Connected to Wifi\n");
+}
+
+int main()
+{
+    try
+    {
+        stdio_init_all();
+        // added this to give my usb serial client time to hook into the program's standard output
+        sleep_ms(1000);
+
+        // connect to the wifi network
+        connectToWifi(DPM_WIFI_SSID, DPM_WIFI_PASSWORD);
+
+        One_wire one_wire(17);
+        one_wire.init();
+        rom_address_t address{};
+        while (true)
+        {
+            one_wire.single_device_read_rom(address);
+            one_wire.convert_temperature(address, true, false);
+            printf("Temperature: %3.1foC\n", one_wire.temperature(address));
+            sleep_ms(1000);
+        }
+    }
+    catch (const std::exception &ex)
+    {
+        printf(std::string("Caught exception: " + std::string(ex.what()) + "/n").c_str());
+        return EXIT_FAILURE;
+    }
+    catch (...)
+    {
+        printf("Caught unknown exception/n");
+        return EXIT_FAILURE;
+    }
+    return EXIT_SUCCESS;
 }
