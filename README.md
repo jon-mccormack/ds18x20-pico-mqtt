@@ -20,7 +20,9 @@ Now you're ready to start building the project. You can follow either the native
 TODO(Jon): steps for installing Pico SDK, and reference how the PICO_SDK_PATH
 is necessary for the project to build.
 
-### Building Natively
+## Building
+
+### Natively
 
 There are some additional pre-requisites that you may not already have installed
 on your host to build the project. You can install them with the following.
@@ -42,7 +44,7 @@ cmake --build .
 
 The binaries will now be available in the `/build` directory.
 
-### Building in VS Code Dev Containers
+### VS Code Dev Containers
 
 _Note: when building the dev container, your Pico must be connected! This is because
 the `/dev/ttyACM0` device is forwarded to the container - so creating the container
