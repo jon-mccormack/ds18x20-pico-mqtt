@@ -9,10 +9,10 @@
                 "${workspaceFolder}/build/generated/pico_base"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/gcc",
+            "compilerPath": "/usr/bin/arm-none-eabi-gcc",
             "cStandard": "c17",
-            "cppStandard": "gnu++17",
-            "intelliSenseMode": "linux-gcc-x64"
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-arm"
         }
     ],
     "version": 4

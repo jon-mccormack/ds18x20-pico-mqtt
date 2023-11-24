@@ -1,5 +1,5 @@
 # Start with a base image containing the necessary tools
-FROM ubuntu:latest
+FROM mcr.microsoft.com/devcontainers/cpp:1-debian-11
 
 # Install the necessary packages
 RUN apt-get update && apt-get install -y \

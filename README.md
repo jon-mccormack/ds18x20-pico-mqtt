@@ -8,6 +8,11 @@ readings in a Home Assistant-friendly format.
 After cloning this repo, ensure that git submodules are also resolved
 by running `git submodule update --recursive --init`.
 
+### Pico SDK
+
+TODO(Jon): steps for installing Pico SDK, and reference how the PICO_SDK_PATH
+is necessary for the project to build.
+
 ### VS Code Dev Container
 
 When building the dev container, your Pico must be connected! This is because

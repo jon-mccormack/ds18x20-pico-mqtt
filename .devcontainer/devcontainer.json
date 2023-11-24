@@ -20,5 +20,6 @@
                 }
             }
         }
-    }
+    },
+    "containerUser": "vscode"
 }
