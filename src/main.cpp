@@ -6,9 +6,8 @@
 #include "pico/cyw43_arch.h"
 #include "wifi.h"
 #include "lwip/apps/mqtt.h"
-// #include "lwip/mq"
 
-// TODO: might add pico-sdk as a submodule to this project, makes version pinning easier and 
+// TODO: might add pico-sdk as a submodule to this project, makes version pinning easier and
 // means better support for anyone using a non-vscode/docker environment
 
 void callback(mqtt_client_t *client, void *arg, mqtt_connection_status_t status) {}

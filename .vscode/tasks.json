@@ -3,18 +3,34 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "Configure CMake",
-			"command": "rm -rf build/ && mkdir build && cd build && cmake -DWIFI_SSID=${WIFI_SSID} -DWIFI_PASSWORD=${WIFI_PASSWORD} .."
+			"label": "create build directory",
+			"command": "mkdir ${workspaceFolder}/build"
 		},
 		{
 			"type": "shell",
-			"label": "Build",
+			"label": "cmake",
+			"command": "source ${workspaceFolder}/config.sh && cmake ..",
+			"options": {
+				"cwd": "${workspaceFolder}/build"
+			},
+			"dependsOn": [
+				"create build directory"
+			]
+		},
+		{
+			"type": "shell",
+			"label": "build",
 			"command": "cd build && cmake --build .",
-			"problemMatcher": [],
+			"problemMatcher": [
+				"$gcc"
+			],
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			}
+			},
+			"dependsOn": [
+				"cmake"
+			]
 		},
 		{
 			"type": "shell",
