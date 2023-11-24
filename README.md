@@ -5,6 +5,8 @@ readings in a Home Assistant-friendly format.
 
 ## Setup
 
+TODO(Jon): these setup docs are a bit of a mess
+
 After cloning this repo, ensure that git submodules are also resolved
 by running `git submodule update --recursive --init`.
 
