@@ -60,17 +60,17 @@ The binaries will now be available in the `/build` directory.
 ## Running
 
 To run the project, copy the built `ds18x20-pico-mqtt.uf2` (in the `/build` directory)
-file over to your Pico; ensure your Pico is in USB Mass Storage mode by holding the
+binary over to your Pico; ensure your Pico is in USB Mass Storage mode by holding the
 BOOTSEL button when powering up.
 
-Once copied, the Pico will run our applicaiton.
+The Pico will run the binary once it restarts. 
 
 ## Debugging
 
-You can use USB Serial (minicom) to view the standard output of our program
+You can use USB Serial (minicom) to view the standard output of the app
 running on the Pico.
 
 Run `minicom -b 115200 -o -D /dev/ttyACM0` from the host that the Pico is
-plugged into. Note, minicom must be installed for this to work
+connected to. Note, minicom must be installed for this to work
 (`sudo apt-get install minicom`). If using VS Code, you can run the task
 "Monitor Pico's USB serial output" instead to monitor the standard output.
