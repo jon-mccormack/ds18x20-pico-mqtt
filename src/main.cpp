@@ -24,7 +24,7 @@ void connectToWifi(const std::string &ssid, const std::string &password)
     // enable station mode, which allows the pico to connect to access points
     cyw43_arch_enable_sta_mode();
 
-    if (cyw43_arch_wifi_connect_timeout_ms(DPM_WIFI_SSID, DPM_WIFI_PASSWORD, CYW43_AUTH_WPA2_AES_PSK, 10000))
+    if (cyw43_arch_wifi_connect_timeout_ms(ssid.c_str(), password.c_str(), CYW43_AUTH_WPA2_AES_PSK, 10000))
     {
         throw std::runtime_error("Failed to connect to Wifi");
     }
@@ -65,12 +65,12 @@ int main()
     {
         stdio_init_all();
         // added this to give my usb serial client time to hook into the program's standard output
-        sleep_ms(1000);
+        sleep_ms(5000);
 
         // connect to the wifi network
         connectToWifi(DPM_WIFI_SSID, DPM_WIFI_PASSWORD);
 
-        mqtt();
+        // mqtt();
 
         One_wire one_wire(17);
         one_wire.init();
@@ -85,12 +85,12 @@ int main()
     }
     catch (const std::exception &ex)
     {
-        printf(std::string("Caught exception: " + std::string(ex.what()) + "/n").c_str());
+        printf(std::string("Caught exception: " + std::string(ex.what()) + "\n").c_str());
         return EXIT_FAILURE;
     }
     catch (...)
     {
-        printf("Caught unknown exception/n");
+        printf("Caught unknown exception\n");
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;

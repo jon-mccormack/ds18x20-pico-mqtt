@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_LWIPOPTS_H
-#define _INCLUDE_LWIPOPTS_H
+#ifndef _INCLUDE_LWIPOPTS_H_
+#define _INCLUDE_LWIPOPTS_H_
 
 // Common settings used in most of the pico_w examples
 // (see https://www.nongnu.org/lwip/2_1_x/group__lwip__opts.html for details)
@@ -86,4 +86,4 @@
 #define SLIP_DEBUG LWIP_DBG_OFF
 #define DHCP_DEBUG LWIP_DBG_OFF
 
-#endif // _INCLUDE_LWIPOPTS_H
+#endif // _INCLUDE_LWIPOPTS_H_

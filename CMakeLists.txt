@@ -5,7 +5,7 @@ set(PICO_CXX_ENABLE_EXCEPTIONS 1)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-# Reference Pico CMake functions
+# Reference Pico CMake config
 include($ENV{PICO_SDK_PATH}/pico_sdk_init.cmake)
 
 # Define project
@@ -15,10 +15,18 @@ project(ds18x20-pico-mqtt VERSION 0.1.0)
 pico_sdk_init()
 
 # Wifi configuration
-option(WIFI_SSID "Wifi network's SSID" $ENV{WIFI_SSID})
-option(WIFI_PASSWORD "Wifi network's password" $ENV{WIFI_PASSWORD})
+option(WIFI_SSID "Wifi network's SSID" "ENV{WIFI_SSID}")
+option(WIFI_PASSWORD "Wifi network's password" ENV{WIFI_PASSWORD})
+
+if (DEFINED ENV{WIFI_SSID})
+    set(WIFI_SSID "$ENV{WIFI_SSID}")
+endif()
+if (DEFINED ENV{WIFI_PASSWORD})
+    set(WIFI_PASSWORD "$ENV{WIFI_PASSWORD}")
+endif()
+
+# Build-time macro definition
 add_compile_definitions(DPM_WIFI_SSID="${WIFI_SSID}" DPM_WIFI_PASSWORD="${WIFI_PASSWORD}")
-message("Using ${WIFI_SSID} ${WIFI_PASSWORD}")
 
 # Project source files
 file (GLOB_RECURSE SRC "src/*.cpp")
