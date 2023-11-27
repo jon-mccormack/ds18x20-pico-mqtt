@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18)
 
-SET(PICO_BOARD pico_w)
+set(PICO_BOARD pico_w)
 set(PICO_CXX_ENABLE_EXCEPTIONS 1)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
@@ -41,7 +41,6 @@ target_link_libraries(${PROJECT_NAME}
     pico_one_wire
     pico_cyw43_arch_lwip_threadsafe_background
 )
-
 
 # Third-party dependencies
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/modules/pico-onewire)

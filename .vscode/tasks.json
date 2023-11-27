@@ -4,12 +4,12 @@
 		{
 			"type": "shell",
 			"label": "create build directory",
-			"command": "mkdir ${workspaceFolder}/build"
+			"command": "mkdir -p ${workspaceFolder}/build"
 		},
 		{
 			"type": "shell",
 			"label": "cmake",
-			"command": "source ${workspaceFolder}/config.sh && cmake ..",
+			"command": "source ${workspaceFolder}/env.sh && cmake ..",
 			"options": {
 				"cwd": "${workspaceFolder}/build"
 			},

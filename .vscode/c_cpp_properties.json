@@ -3,10 +3,10 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${env:PICO_SDK_PATH}/src/**",
-                "${env:PICO_SDK_PATH}/lib/**",
-                "${workspaceFolder}/build/generated/pico_base"
+                "${workspaceFolder}/modules/pico-onewire/api",
+                "${workspaceFolder}/modules/pico-sdk/**",
+                "${workspaceFolder}/build/generated/pico_base",
+                "${workspaceFolder}/include"
             ],
             "defines": [],
             "cStandard": "c11",

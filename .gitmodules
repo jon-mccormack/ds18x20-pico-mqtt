@@ -1,3 +1,6 @@
 [submodule "modules/pico-onewire"]
 	path = modules/pico-onewire
 	url = git@github.com:adamboardman/pico-onewire.git
+[submodule "modules/pico-sdk"]
+	path = modules/pico-sdk
+	url = git@github.com:raspberrypi/pico-sdk.git
