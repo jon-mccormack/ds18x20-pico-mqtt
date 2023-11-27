@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <ostream>
+#include <iostream>
 #include "pico/stdlib.h"
 #include "one_wire.h"
 #include "hardware/gpio.h"
@@ -10,12 +11,13 @@
 // TODO: might add pico-sdk as a submodule to this project, makes version pinning easier and
 // means better support for anyone using a non-vscode/docker environment
 
-void callback(mqtt_client_t *client, void *arg, mqtt_connection_status_t status) {}
+void callback(mqtt_client_t *client, void *arg, mqtt_connection_status_t status) {
+    std::cout << "callback called!?" << std::endl;
+}
 
 void connectToWifi(const std::string &ssid, const std::string &password)
 {
-    printf(std::string("Launching using ssid " + ssid + " and password " + password + "\n").c_str());
-
+    std::cout << "Connecting to Wifi using ssid " << ssid << " and password " << password << std::endl;
     if (cyw43_arch_init_with_country(CYW43_COUNTRY_UK))
     {
         throw std::runtime_error("Failed to initialise CYW43 Wifi chip");
@@ -28,7 +30,7 @@ void connectToWifi(const std::string &ssid, const std::string &password)
     {
         throw std::runtime_error("Failed to connect to Wifi");
     }
-    printf("Connected to Wifi\n");
+    std::cout << "Connected to Wifi!" << std::endl;
 }
 
 void mqtt()
@@ -85,12 +87,13 @@ int main()
     }
     catch (const std::exception &ex)
     {
+        std::cout << "Caught exception: " << ex.what() << std::endl;
         printf(std::string("Caught exception: " + std::string(ex.what()) + "\n").c_str());
         return EXIT_FAILURE;
     }
     catch (...)
     {
-        printf("Caught unknown exception\n");
+        std::cout << "Caught unknown exception..." << std::endl;
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
