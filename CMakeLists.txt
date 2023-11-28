@@ -15,8 +15,8 @@ project(ds18x20-pico-mqtt VERSION 0.1.0)
 pico_sdk_init()
 
 # Wifi configuration
-option(WIFI_SSID "Wifi network's SSID" $ENV{WIFI_SSID})
-option(WIFI_PASSWORD "Wifi network's password" $ENV{WIFI_PASSWORD})
+option(WIFI_SSID "Wifi network's SSID")
+option(WIFI_PASSWORD "Wifi network's password")
 add_compile_definitions(DPM_WIFI_SSID="${WIFI_SSID}" DPM_WIFI_PASSWORD="${WIFI_PASSWORD}")
 message("Using ${WIFI_SSID} ${WIFI_PASSWORD}")
 
