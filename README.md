@@ -5,26 +5,24 @@ readings in a Home Assistant-friendly format.
 
 ## Getting Started
 
-Firstly you should ensure the git submodules are resolved by running the
-following.
+Ensure Git submodules are resolved.
 
 ```bash
 git submodule update --recursive --init
 ```
 
-Now you're ready to start building the project.
-
-## Building
-
-There are some additional pre-requisites that you may not already have installed
-on your host to build the project. You can install them with the following.
+Install build-time prerequisites.
 
 ```bash
 sudo apt-get update
 sudo apt-get install -y build-essential <TODO>
 ```
 
-Now you can build the project. Make sure you emplace the config options
+Now you're ready to start building the project.
+
+## Building
+
+Run the following to build the project, ensuring you update the config options
 `<ssid>` and `<password>` to suit your setup.
 
 ```bash
