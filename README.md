@@ -48,7 +48,7 @@ You can use USB Serial (minicom) to view the standard output of the app
 running on the Pico. Run `minicom -b 115200 -o -D /dev/ttyACM0` from the
 host that the Pico is connected to and you should start seeing the logs.
 Note, minicom must be installed for this to work
-(`sudo apt-get install minicom``). 
+(`sudo apt-get install minicom`). 
 
 ## VS Code Dev Container
 
