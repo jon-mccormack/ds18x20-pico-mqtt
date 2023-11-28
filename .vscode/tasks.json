@@ -35,7 +35,8 @@
 		{
 			"type": "shell",
 			"label": "Monitor Pico's USB serial output",
-			"command": "sudo minicom -b 115200 -o -D /dev/ttyACM0"
+			"command": "sudo minicom -b 115200 -o -D /dev/ttyACM0",
+			"problemMatcher": []
 		}
 	]
 }

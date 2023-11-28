@@ -7,13 +7,8 @@
 #include "pico/cyw43_arch.h"
 #include "wifi.h"
 #include "lwip/apps/mqtt.h"
-
-// TODO: might add pico-sdk as a submodule to this project, makes version pinning easier and
-// means better support for anyone using a non-vscode/docker environment
-
-void callback(mqtt_client_t *client, void *arg, mqtt_connection_status_t status) {
-    std::cout << "callback called!?" << std::endl;
-}
+#include "lwip/arch.h"
+#include "MqttClient.h"
 
 void connectToWifi(const std::string &ssid, const std::string &password)
 {
@@ -33,34 +28,6 @@ void connectToWifi(const std::string &ssid, const std::string &password)
     std::cout << "Connected to Wifi!" << std::endl;
 }
 
-void mqtt()
-{
-    mqtt_client_t *client = mqtt_client_new();
-    struct mqtt_connect_client_info_t ci;
-    err_t err;
-
-    /* Setup an empty client info structure */
-    memset(&ci, 0, sizeof(ci));
-
-    /* Minimal amount of information required is client identifier, so set it here */
-    ci.client_id = "lwip_test";
-
-    /* Initiate client and connect to server, if this fails immediately an error code is returned
-       otherwise mqtt_connection_cb will be called with connection result after attempting
-       to establish a connection with the server.
-       For now MQTT version 3.1.1 is always used */
-
-    ip_addr_t broker;
-    IP4_ADDR(&broker, 192, 168, 1, 37);
-    err = mqtt_client_connect(client, &broker, 1883, callback, 0, &ci);
-
-    //   /* For now just print the result code if something goes wrong
-    if (err != ERR_OK)
-    {
-        printf("mqtt_connect return %d\n", err);
-    }
-}
-
 int main()
 {
     try
@@ -74,6 +41,9 @@ int main()
 
         // mqtt();
 
+        MqttClient client("192.168.1.37", 1883);
+        client.publish("jon-topic", "Hello from Pico!!");
+
         One_wire one_wire(17);
         one_wire.init();
         rom_address_t address{};
@@ -82,6 +52,7 @@ int main()
             one_wire.single_device_read_rom(address);
             one_wire.convert_temperature(address, true, false);
             printf("Temperature: %3.1foC\n", one_wire.temperature(address));
+            client.publish("jon-topic", std::to_string(one_wire.temperature(address)));
             sleep_ms(1000);
         }
     }
