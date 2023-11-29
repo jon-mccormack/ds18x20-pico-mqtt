@@ -42,10 +42,11 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
 
     if (status == MQTT_CONNECT_ACCEPTED)
     {
+        std::cout << "Mqtt connection accepted :)" << std::endl;
         // need to figure out what these are for, but if they're commented out the messages
         // timeout when publishing
-        mqtt_sub_unsub(client, "topic_qos1", 1, mqtt_request_cb, LWIP_CONST_CAST(void *, client_info), 1);
-        mqtt_sub_unsub(client, "topic_qos0", 0, mqtt_request_cb, LWIP_CONST_CAST(void *, client_info), 1);
+        // mqtt_sub_unsub(client, "topic_qos1", 1, mqtt_request_cb, LWIP_CONST_CAST(void *, client_info), 1);
+        // mqtt_sub_unsub(client, "topic_qos0", 0, mqtt_request_cb, LWIP_CONST_CAST(void *, client_info), 1);
     }
 }
 
@@ -95,7 +96,8 @@ MqttClient::MqttClient(const std::string &address, uint16_t port)
     //                         LWIP_CONST_CAST(void *, &mqtt_client_info));
 
     mqtt_client_connect(client,
-                        &broker, MQTT_PORT,
+                        &broker, 
+                        port,
                         mqtt_connection_cb, LWIP_CONST_CAST(void *, &mqtt_client_info),
                         &mqtt_client_info);
 
@@ -107,7 +109,7 @@ void MqttClient::publish(const std::string &topic, const std::string &payload)
     cyw43_arch_lwip_begin();
     std::cout << "MqttClient::publish" << std::endl;
     err_t err;
-    u8_t qos = 0; /* 0 1 or 2, see MQTT specification.  AWS IoT does not support QoS 2 */
+    u8_t qos = 1; /* 0 1 or 2, see MQTT specification.  AWS IoT does not support QoS 2 */
     u8_t retain = 0;
     err = mqtt_publish(client, topic.c_str(), payload.c_str(), payload.length(), qos, retain, mqtt_pub_request_cb, nullptr);
     cyw43_arch_lwip_end();
