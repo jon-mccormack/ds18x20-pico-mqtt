@@ -5,7 +5,7 @@
 #include "one_wire.h"
 #include "hardware/gpio.h"
 #include "pico/cyw43_arch.h"
-#include "wifi.h"
+#include "config.h"
 #include "lwip/apps/mqtt.h"
 #include "lwip/arch.h"
 #include "MqttClient.h"
@@ -41,8 +41,7 @@ int main()
 
         // mqtt();
 
-        MqttClient client("192.168.1.37", 1883);
-        client.publish("jon-topic", "Hello from Pico!!");
+        MqttClient client(DPM_MQTT_BROKER_ADDR, DPM_MQTT_BROKER_PORT);
 
         One_wire one_wire(17);
         one_wire.init();

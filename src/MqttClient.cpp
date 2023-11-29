@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include "MqttClient.h"
 #include "lwip/arch.h"
 #include "pico/cyw43_arch.h"
@@ -68,8 +69,20 @@ void mqtt_pub_request_cb(void *arg, err_t err)
     };
 }
 
+ip_addr_t getAddress(const std::string &ip)
+{
+    std::stringstream s(ip);
+    int a, b, c, d; // to store the 4 ints
+    char ch;        // to temporarily store the '.'
+    s >> a >> ch >> b >> ch >> c >> ch >> d;
+    ip_addr_t broker;
+    IP4_ADDR(&broker, a, b, c, d);
+    return broker;
+}
+
 MqttClient::MqttClient(const std::string &address, uint16_t port)
 {
+    std::cout << "Mqtt broker ip: " << address << ", port: " << std::to_string(port) << std::endl;
     cyw43_arch_lwip_begin();
     client = mqtt_client_new();
 
@@ -86,8 +99,8 @@ MqttClient::MqttClient(const std::string &address, uint16_t port)
 
         };
 
-    ip_addr_t broker;
-    IP4_ADDR(&broker, 192, 168, 1, 37);
+    ip_addr_t broker = getAddress(address);
+    // IP4_ADDR(&broker, 192, 168, 1, 37);
     // IP4_ADDR(&broker, 127, 0, 0, 1);
 
     // mqtt_set_inpub_callback(client,
@@ -95,11 +108,13 @@ MqttClient::MqttClient(const std::string &address, uint16_t port)
     //                         mqtt_incoming_data_cb,
     //                         LWIP_CONST_CAST(void *, &mqtt_client_info));
 
-    mqtt_client_connect(client,
-                        &broker, 
-                        port,
-                        mqtt_connection_cb, LWIP_CONST_CAST(void *, &mqtt_client_info),
-                        &mqtt_client_info);
+    mqtt_client_connect(
+        client,
+        &broker,
+        port,
+        mqtt_connection_cb,
+        LWIP_CONST_CAST(void *, &mqtt_client_info),
+        &mqtt_client_info);
 
     cyw43_arch_lwip_end();
 }
@@ -108,10 +123,9 @@ void MqttClient::publish(const std::string &topic, const std::string &payload)
 {
     cyw43_arch_lwip_begin();
     std::cout << "MqttClient::publish" << std::endl;
-    err_t err;
     u8_t qos = 1; /* 0 1 or 2, see MQTT specification.  AWS IoT does not support QoS 2 */
     u8_t retain = 0;
-    err = mqtt_publish(client, topic.c_str(), payload.c_str(), payload.length(), qos, retain, mqtt_pub_request_cb, nullptr);
+    err_t err = mqtt_publish(client, topic.c_str(), payload.c_str(), payload.length(), qos, retain, mqtt_pub_request_cb, nullptr);
     cyw43_arch_lwip_end();
     if (err != ERR_OK)
     {

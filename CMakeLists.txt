@@ -24,9 +24,20 @@ endif()
 if (DEFINED ENV{WIFI_PASSWORD})
     set(WIFI_PASSWORD "$ENV{WIFI_PASSWORD}")
 endif()
+if (DEFINED ENV{MQTT_BROKER_ADDRESS})
+    set(MQTT_BROKER_ADDRESS "$ENV{MQTT_BROKER_ADDRESS}")
+endif()
+if (DEFINED ENV{MQTT_BROKER_PORT})
+    set(MQTT_BROKER_PORT "$ENV{MQTT_BROKER_PORT}")
+endif()
 
 # Build-time macro definition
-add_compile_definitions(DPM_WIFI_SSID="${WIFI_SSID}" DPM_WIFI_PASSWORD="${WIFI_PASSWORD}")
+add_compile_definitions(
+    DPM_WIFI_SSID="${WIFI_SSID}"
+    DPM_WIFI_PASSWORD="${WIFI_PASSWORD}"
+    DPM_MQTT_BROKER_ADDR="${MQTT_BROKER_ADDRESS}"
+    DPM_MQTT_BROKER_PORT=${MQTT_BROKER_PORT}
+)
 
 # Project source files
 file (GLOB_RECURSE SRC "src/*.cpp")
