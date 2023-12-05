@@ -48,7 +48,7 @@ int main()
         // TODO(Jon): do this https://github.com/plapointe6/HAMqttDevice
         HAMqttDevice tempSensor("Pico DS18x20 Temperature Probe", HAMqttDevice::DeviceType::SENSOR, "homeassistant");
 
-        tempSensor.addConfigVar("unit_of_measure", "°C");
+        tempSensor.addConfigVar("unit_of_measurement", "°C");
         tempSensor.addConfigVar("value_template", " {{ value_json.temperature }} ");
         tempSensor.addConfigVar("device_class", "temperature");
 
