@@ -46,12 +46,17 @@ file (GLOB_RECURSE SRC "src/*.cpp")
 add_executable(${PROJECT_NAME}
     ${SRC}
     $ENV{PICO_SDK_PATH}/lib/lwip/src/apps/mqtt/mqtt.c
+
+    # TODO: need to apply the pico.patch file to HAMqttDevice module
+    ${CMAKE_CURRENT_LIST_DIR}/modules/HAMqttDevice/src/HAMqttDevice.cpp
 )
 
 # Headers
 target_include_directories(${PROJECT_NAME}
-    PRIVATE 
+    PRIVATE
         include/
+    PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}/modules/HAMqttDevice/src
 )
 
 # Link libs

@@ -1,7 +1,7 @@
 #ifndef _INCLUDE_CONFIG_H_
 #define _INCLUDE_CONFIG_H_
 
-// should be overridden by CMake build config
+// The following should be overridden by CMake build config
 
 #ifndef DPM_WIFI_SSID
 #define DPM_WIFI_SSID ""
@@ -17,6 +17,14 @@
 
 #ifndef DPM_MQTT_BROKER_PORT
 #define DPM_MQTT_BROKER_PORT 0
+#endif
+
+#ifndef DPM_MQTT_PUBLISH_TOPIC
+#define DPM_MQTT_PUBLISH_TOPIC ""
+#endif
+
+#ifndef DPM_SENDOR_ID
+#define DPM_SENSOR_ID "1"
 #endif
 
 

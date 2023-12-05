@@ -18,6 +18,8 @@
 // MEM_LIBC_MALLOC is incompatible with non polling versions
 #define MEM_LIBC_MALLOC 0
 #endif
+// required for larger mqtt payloads
+#define MQTT_OUTPUT_RINGBUF_SIZE   1024
 #define MEM_ALIGNMENT 4
 #define MEM_SIZE 4000
 #define MEMP_NUM_TCP_SEG 32

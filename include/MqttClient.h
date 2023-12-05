@@ -12,6 +12,8 @@ private:
 public:
     MqttClient(const std::string &address, uint16_t port);
     void publish(const std::string &topic, const std::string &payload);
+    void publishDiscoveryMessage(const std::string &sensorId);
+    void publishStateMessage(const std::string &sensorId, float temperature);
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include "lwip/arch.h"
 #include "pico/cyw43_arch.h"
 #include "lwip/arch.h"
+#include "config.h"
 
 static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags)
 {
@@ -38,16 +39,12 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
 
     if (status != MQTT_CONNECT_ACCEPTED)
     {
-        std::cerr << "Didn't connect!" << std::endl;
+        std::cerr << "Mqtt connection not accepted :(" << std::endl;
     }
 
     if (status == MQTT_CONNECT_ACCEPTED)
     {
         std::cout << "Mqtt connection accepted :)" << std::endl;
-        // need to figure out what these are for, but if they're commented out the messages
-        // timeout when publishing
-        // mqtt_sub_unsub(client, "topic_qos1", 1, mqtt_request_cb, LWIP_CONST_CAST(void *, client_info), 1);
-        // mqtt_sub_unsub(client, "topic_qos0", 0, mqtt_request_cb, LWIP_CONST_CAST(void *, client_info), 1);
     }
 }
 
@@ -100,13 +97,6 @@ MqttClient::MqttClient(const std::string &address, uint16_t port)
         };
 
     ip_addr_t broker = getAddress(address);
-    // IP4_ADDR(&broker, 192, 168, 1, 37);
-    // IP4_ADDR(&broker, 127, 0, 0, 1);
-
-    // mqtt_set_inpub_callback(client,
-    //                         mqtt_incoming_publish_cb,
-    //                         mqtt_incoming_data_cb,
-    //                         LWIP_CONST_CAST(void *, &mqtt_client_info));
 
     mqtt_client_connect(
         client,
@@ -122,13 +112,56 @@ MqttClient::MqttClient(const std::string &address, uint16_t port)
 void MqttClient::publish(const std::string &topic, const std::string &payload)
 {
     cyw43_arch_lwip_begin();
-    std::cout << "MqttClient::publish" << std::endl;
-    u8_t qos = 1; /* 0 1 or 2, see MQTT specification.  AWS IoT does not support QoS 2 */
+    u8_t qos = 1;
     u8_t retain = 0;
     err_t err = mqtt_publish(client, topic.c_str(), payload.c_str(), payload.length(), qos, retain, mqtt_pub_request_cb, nullptr);
     cyw43_arch_lwip_end();
     if (err != ERR_OK)
     {
-        std::cout << "Publish err: " << std::to_string(err) << std::endl;
+        throw std::runtime_error("Publish error: " + std::to_string(err));
     }
+}
+
+std::string getStateTopic(const std::string &sensorId)
+{
+    return "homeassistant/sensor/fermentor/state";
+}
+
+std::string getDiscoveryJson(const std::string &sensorId)
+{
+    // https://www.home-assistant.io/integrations/mqtt/#discovery-payload
+    std::stringstream str;
+    str
+        << "{"
+        << "\"device_class\": \"temperature\","
+        << "\"state_topic\": \"" + getStateTopic(sensorId) + "\","
+        << "\"unit_of_measurement\": \"°C\","
+        << "\"value_template\": \"{{ value_json.temperature }}\","
+        << "\"name\": \"" << sensorId << "-temperature\","
+        << "\"unique_id\": \"test123123\""
+        << "}";
+
+    return str.str();
+}
+
+void MqttClient::publishDiscoveryMessage(const std::string &sensorId)
+{
+    // https://www.home-assistant.io/integrations/mqtt/#discovery-messages
+    std::string discoveryTopic = "homeassistant/sensor/fermentor/config";
+    publish(discoveryTopic, getDiscoveryJson(sensorId));
+}
+
+std::string getStateJson(float temperature)
+{
+    std::stringstream str;
+    str << "{"
+        << "\"temperature\": " + std::to_string(temperature)
+        << "}";
+
+    return str.str();
+}
+
+void MqttClient::publishStateMessage(const std::string &sensorId, float temperature)
+{
+    publish(getStateTopic(sensorId), getStateJson(temperature));
 }
