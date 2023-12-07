@@ -4,6 +4,3 @@
 [submodule "modules/pico-sdk"]
 	path = modules/pico-sdk
 	url = git@github.com:raspberrypi/pico-sdk.git
-[submodule "modules/HAMqttDevice"]
-	path = modules/HAMqttDevice
-	url = git@github.com:plapointe6/HAMqttDevice.git

@@ -8,9 +8,10 @@
 #include "pico/cyw43_arch.h"
 #include "config.h"
 #include "lwip/apps/mqtt.h"
+#include <algorithm>
 #include "lwip/arch.h"
+#include <sstream>
 #include "MqttClient.h"
-#include "HAMqttDevice.h"
 
 void connectToWifi(const std::string &ssid, const std::string &password)
 {
@@ -30,7 +31,61 @@ void connectToWifi(const std::string &ssid, const std::string &password)
     std::cout << "Connected to Wifi!" << std::endl;
 }
 
-std::string getStateJson(float temperature);
+std::string getStateJson(float temperature)
+{
+    std::stringstream str;
+    str << "{"
+        << "\"temperature\": " + std::to_string(temperature)
+        << "}";
+
+    return str.str();
+}
+
+std::string getUniqueId(const std::string &name)
+{
+    std::string ret = name;
+    std::transform(ret.begin(), ret.end(), ret.begin(),
+                   [](unsigned char c)
+                   {
+                       unsigned char space = ' ';
+                       unsigned char underscore = '_';
+                       if (c == space)
+                       {
+                           return underscore;
+                       }
+                       unsigned char lower = std::tolower(c);
+                       return lower;
+                   });
+    return ret;
+}
+
+std::string getConfigTopic(const std::string &name, const std::string &haMqttPrefix)
+{
+    return haMqttPrefix + "/sensor/" + getUniqueId(name) + "/config";
+}
+
+std::string getStateTopic(const std::string &name, const std::string &haMqttPrefix)
+{
+    return haMqttPrefix + "/sensor/" + getUniqueId(name) + "/state";
+}
+
+std::string getConfigPayload(const std::string &name, const std::string &haMqttPrefix)
+{
+    std::stringstream json;
+    std::string uniqueId = getUniqueId(name);
+
+    json << "{"
+         << "\"~\":\"" << haMqttPrefix << "/sensor/" << uniqueId << "\","
+         << "\"name\":\"" << name << "\","
+         << "\"unique_id\":\"" << uniqueId << "\","
+         << "\"stat_t\":\"~/state\","
+         << "\"unit_of_measurement\":\"°C\","
+         << "\"value_template\":\"{{ value_json.temperature }}\","
+         << "\"device_class\":\"temperature\""
+         << "}";
+
+    return json.str();
+}
 
 int main()
 {
@@ -43,33 +98,38 @@ int main()
         // connect to the wifi network
         connectToWifi(DPM_WIFI_SSID, DPM_WIFI_PASSWORD);
 
-        MqttClient client(DPM_MQTT_BROKER_ADDR, DPM_MQTT_BROKER_PORT);
+        MqttClient client(DPM_MQTT_BROKER_ADDR, DPM_MQTT_BROKER_PORT, "pico-ds18x20-temp-sensor");
 
-        // TODO(Jon): do this https://github.com/plapointe6/HAMqttDevice
-        HAMqttDevice tempSensor("Pico DS18x20 Temperature Probe", HAMqttDevice::DeviceType::SENSOR, "homeassistant");
+        std::string name = "Pico DS18x20 Temperature Probe";
+        std::string haMqttPrefix = "homeassistant";
 
-        tempSensor.addConfigVar("unit_of_measurement", "°C");
-        tempSensor.addConfigVar("value_template", " {{ value_json.temperature }} ");
-        tempSensor.addConfigVar("device_class", "temperature");
-
-        std::cout << "Config topic: " << tempSensor.getConfigTopic() << std::endl;
-        std::cout << "Config payload: " << tempSensor.getConfigPayload() << std::endl;
-        std::cout << "State topic: " << tempSensor.getStateTopic() << std::endl;
-        client.publish(tempSensor.getConfigTopic(), tempSensor.getConfigPayload());
-
-        sleep_ms(3000);
+        client.publish(getConfigTopic(name, haMqttPrefix), getConfigPayload(name, haMqttPrefix));
 
         One_wire one_wire(17);
         one_wire.init();
         rom_address_t address{};
+        one_wire.single_device_read_rom(address);
+        one_wire.convert_temperature(address, true, false);
+        float temp = one_wire.temperature(address);
+
+        // rudimentary way of filtering out 85 c on startup
+        while (temp == 85)
+        {
+            std::cout << "Reading 85!!" << std::endl;
+            sleep_ms(100);
+            one_wire.single_device_read_rom(address);
+            one_wire.convert_temperature(address, true, false);
+            temp = one_wire.temperature(address);
+        }
+
         while (true)
         {
             one_wire.single_device_read_rom(address);
             one_wire.convert_temperature(address, true, false);
-            float temp = one_wire.temperature(address);
+            temp = one_wire.temperature(address);
             if (temp != One_wire::invalid_conversion)
             {
-                client.publish(tempSensor.getStateTopic(), getStateJson(temp));
+                client.publish(getStateTopic(name, haMqttPrefix), getStateJson(temp));
             }
             else
             {

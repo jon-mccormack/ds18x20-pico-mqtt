@@ -10,7 +10,7 @@ private:
     mqtt_client_t *client;
 
 public:
-    MqttClient(const std::string &address, uint16_t port);
+    MqttClient(const std::string &address, uint16_t port, const std::string& clientId);
     void publish(const std::string &topic, const std::string &payload);
     void publishDiscoveryMessage(const std::string &sensorId);
     void publishStateMessage(const std::string &sensorId, float temperature);

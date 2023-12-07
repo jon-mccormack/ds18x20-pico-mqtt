@@ -77,7 +77,7 @@ ip_addr_t getAddress(const std::string &ip)
     return broker;
 }
 
-MqttClient::MqttClient(const std::string &address, uint16_t port)
+MqttClient::MqttClient(const std::string &address, uint16_t port, const std::string& clientId)
 {
     std::cout << "Mqtt broker ip: " << address << ", port: " << std::to_string(port) << std::endl;
     cyw43_arch_lwip_begin();
@@ -85,7 +85,7 @@ MqttClient::MqttClient(const std::string &address, uint16_t port)
 
     static const struct mqtt_connect_client_info_t mqtt_client_info =
         {
-            "jon-boy",
+            clientId.c_str(),
             NULL, /* user */
             NULL, /* pass */
             5,    /* keep alive */
@@ -151,17 +151,7 @@ void MqttClient::publishDiscoveryMessage(const std::string &sensorId)
     publish(discoveryTopic, getDiscoveryJson(sensorId));
 }
 
-std::string getStateJson(float temperature)
-{
-    std::stringstream str;
-    str << "{"
-        << "\"temperature\": " + std::to_string(temperature)
-        << "}";
-
-    return str.str();
-}
-
 void MqttClient::publishStateMessage(const std::string &sensorId, float temperature)
 {
-    publish(getStateTopic(sensorId), getStateJson(temperature));
+    publish(getStateTopic(sensorId), "getStateJson(temperature)");
 }
