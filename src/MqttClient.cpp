@@ -35,6 +35,9 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
     const struct mqtt_connect_client_info_t *client_info = (const struct mqtt_connect_client_info_t *)arg;
     LWIP_UNUSED_ARG(client);
 
+    // this gets called when we logs connection to the MQTT client! we cannot publish any messages after
+    // this because they will fail
+
     LWIP_PLATFORM_DIAG(("MQTT client \"%s\" connection cb: status %d\n", client_info->client_id, (int)status));
 
     if (status != MQTT_CONNECT_ACCEPTED)
@@ -114,6 +117,8 @@ void MqttClient::publish(const std::string &topic, const std::string &payload)
     cyw43_arch_lwip_begin();
     u8_t qos = 1;
     u8_t retain = 0;
+    // TODO(Jon): should have a bool which is set when successful connection callback is called,
+    // so to not publish messages from a non-connected mqtt client
     err_t err = mqtt_publish(client, topic.c_str(), payload.c_str(), payload.length(), qos, retain, mqtt_pub_request_cb, nullptr);
     cyw43_arch_lwip_end();
     if (err != ERR_OK)
@@ -134,6 +139,7 @@ std::string getDiscoveryJson(const std::string &sensorId)
     str
         << "{"
         << "\"device_class\": \"temperature\","
+        << "\"state_class\": \"measurement\","
         << "\"state_topic\": \"" + getStateTopic(sensorId) + "\","
         << "\"unit_of_measurement\": \"°C\","
         << "\"value_template\": \"{{ value_json.temperature }}\","
@@ -143,6 +149,7 @@ std::string getDiscoveryJson(const std::string &sensorId)
 
     return str.str();
 }
+
 
 void MqttClient::publishDiscoveryMessage(const std::string &sensorId)
 {
