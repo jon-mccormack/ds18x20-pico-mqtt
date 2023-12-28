@@ -17,8 +17,8 @@ class DS18x20 {
   void publishStatePayload(float temperature);
 
  public:
-  explicit DS18x20(MqttClient* mqttClient, const std::string& deviceName, const std::string& haMqttPrefix,
-                   uint gpioPin);
+  explicit DS18x20(MqttClient* mqttClient, const std::string& deviceName, const std::string& deviceId,
+                   const std::string& haMqttPrefix, uint gpioPin);
   void monitor();
 };
 

@@ -7,6 +7,9 @@
 #include "lwip/arch.h"
 #include "pico/cyw43_arch.h"
 
+// TODO(Jon): i'm not sure how useful these LWIP-specific macro-function calls are, maybe replace with std::ignore and
+// std::cout?
+
 static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags) {
   const struct mqtt_connect_client_info_t *client_info = (const struct mqtt_connect_client_info_t *)arg;
   LWIP_UNUSED_ARG(data);
@@ -30,9 +33,8 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
   const struct mqtt_connect_client_info_t *client_info = (const struct mqtt_connect_client_info_t *)arg;
   LWIP_UNUSED_ARG(client);
 
-  // this gets called when we lose connection to the MQTT client! we cannot publish any messages after
-  // this because they will fail
-
+  // this gets called when we lose connection to the MQTT client! any subsequent publish calls will return a fail
+  // (non-zero) status
   LWIP_PLATFORM_DIAG(
       ("MQTT client \"%s\" connection cb: status %d\n", client_info->client_id, static_cast<int>(status)));
 

@@ -16,11 +16,7 @@
 #endif
 
 #ifndef DPM_MQTT_BROKER_PORT
-#define DPM_MQTT_BROKER_PORT 0
-#endif
-
-#ifndef DPM_MQTT_PUBLISH_TOPIC
-#define DPM_MQTT_PUBLISH_TOPIC ""
+#define DPM_MQTT_BROKER_PORT 1883
 #endif
 
 #ifndef DPM_DEVICE_NAME

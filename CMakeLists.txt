@@ -18,6 +18,7 @@ pico_sdk_init()
 option(WIFI_SSID "Wifi network's SSID")
 option(WIFI_PASSWORD "Wifi network's password")
 
+# Not really happy with this config solution, but it works
 if (DEFINED ENV{WIFI_SSID})
     set(WIFI_SSID "$ENV{WIFI_SSID}")
 endif()
@@ -30,6 +31,15 @@ endif()
 if (DEFINED ENV{MQTT_BROKER_PORT})
     set(MQTT_BROKER_PORT "$ENV{MQTT_BROKER_PORT}")
 endif()
+if (DEFINED ENV{DEVICE_NAME})
+    set(DEVICE_NAME "$ENV{DEVICE_NAME}")
+endif()
+if (DEFINED ENV{HA_MQTT_PREFIX})
+    set(HA_MQTT_PREFIX "$ENV{HA_MQTT_PREFIX}")
+endif()
+if (DEFINED ENV{GPIO_PIN})
+    set(GPIO_PIN "$ENV{GPIO_PIN}")
+endif()
 
 # Build-time macro definition
 add_compile_definitions(
@@ -37,6 +47,9 @@ add_compile_definitions(
     DPM_WIFI_PASSWORD="${WIFI_PASSWORD}"
     DPM_MQTT_BROKER_ADDR="${MQTT_BROKER_ADDRESS}"
     DPM_MQTT_BROKER_PORT=${MQTT_BROKER_PORT}
+    DPM_DEVICE_NAME="${DEVICE_NAME}"
+    DPM_HA_MQTT_PREFIX="${HA_MQTT_PREFIX}"
+    DPM_GPIO_PIN=${GPIO_PIN}
 )
 
 # Project source files

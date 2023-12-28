@@ -8,20 +8,6 @@
 #include "hardware/watchdog.h"
 #include "one_wire.h"
 
-std::string getUniqueId(const std::string &name) {
-  std::string ret = name;
-  std::transform(ret.begin(), ret.end(), ret.begin(), [](unsigned char c) {
-    unsigned char space = ' ';
-    unsigned char underscore = '_';
-    if (c == space) {
-      return underscore;
-    }
-    unsigned char lower = std::tolower(c);
-    return lower;
-  });
-  return ret;
-}
-
 std::string getConfigTopic(const std::string &deviceId, const std::string &haMqttPrefix) {
   return haMqttPrefix + "/sensor/" + deviceId + "/config";
 }
@@ -65,13 +51,16 @@ void DS18x20::publishStatePayload(float temperature) {
   p_mqttClient->publish(getStateTopic(m_deviceId, m_haMqttPrefix), getStatePayload(temperature));
 }
 
-DS18x20::DS18x20(MqttClient *mqttClient, const std::string &deviceName, const std::string &haMqttPrefix,
-                          uint gpioPin)
+DS18x20::DS18x20(MqttClient *mqttClient, const std::string &deviceName, const std::string &deviceId,
+                 const std::string &haMqttPrefix, uint gpioPin)
     : p_mqttClient(mqttClient),
       m_deviceName(deviceName),
-      m_deviceId(getUniqueId(deviceName)),
+      m_deviceId(deviceId),
       m_haMqttPrefix(haMqttPrefix),
-      m_gpioPin(gpioPin) {}
+      m_gpioPin(gpioPin) {
+  std::cout << "DS18x20 initialised with Device name: " << m_deviceName << ", Device Id: " << m_deviceId
+            << ", HA Mqtt Prefix: " << m_haMqttPrefix << ", GPIO Pin: " << std::to_string(m_gpioPin) << std::endl;
+}
 
 void DS18x20::monitor() {
   // advertise to HA the sensor's presence
