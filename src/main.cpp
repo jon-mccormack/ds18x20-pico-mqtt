@@ -5,13 +5,10 @@
 #include <ostream>
 #include <sstream>
 
+#include "DS18x20.h"
 #include "MqttClient.h"
 #include "config.h"
-#include "hardware/gpio.h"
 #include "hardware/watchdog.h"
-#include "lwip/apps/mqtt.h"
-#include "lwip/arch.h"
-#include "one_wire.h"
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 
@@ -20,93 +17,6 @@ void connectToWifi(const std::string &ssid, const std::string &password) {
   int res = cyw43_arch_wifi_connect_timeout_ms(ssid.c_str(), password.c_str(), CYW43_AUTH_WPA2_AES_PSK, 60000);
   if (res != pico_error_codes::PICO_OK) {
     throw std::runtime_error("Failed to connect to Wifi, connect response: " + std::to_string(res));
-  }
-}
-
-std::string getStateJson(float temperature) {
-  std::stringstream str;
-  str << "{"
-      << "\"temperature\": " + std::to_string(temperature) << "}";
-
-  return str.str();
-}
-
-std::string getUniqueId(const std::string &name) {
-  std::string ret = name;
-  std::transform(ret.begin(), ret.end(), ret.begin(), [](unsigned char c) {
-    unsigned char space = ' ';
-    unsigned char underscore = '_';
-    if (c == space) {
-      return underscore;
-    }
-    unsigned char lower = std::tolower(c);
-    return lower;
-  });
-  return ret;
-}
-
-std::string getConfigTopic(const std::string &name, const std::string &haMqttPrefix) {
-  return haMqttPrefix + "/sensor/" + getUniqueId(name) + "/config";
-}
-
-std::string getStateTopic(const std::string &name, const std::string &haMqttPrefix) {
-  return haMqttPrefix + "/sensor/" + getUniqueId(name) + "/state";
-}
-
-std::string getConfigPayload(const std::string &name, const std::string &haMqttPrefix) {
-  std::stringstream json;
-  std::string uniqueId = getUniqueId(name);
-
-  json << "{"
-       << "\"~\":\"" << haMqttPrefix << "/sensor/" << uniqueId << "\","
-       << "\"name\":\"" << name << "\","
-       << "\"unique_id\":\"" << uniqueId << "\","
-       << "\"stat_t\":\"~/state\","
-       << "\"unit_of_measurement\":\"°C\","
-       << "\"value_template\":\"{{ value_json.temperature }}\","
-       << "\"device_class\":\"temperature\","
-       << "\"state_class\": \"measurement\""
-       << "}";
-
-  return json.str();
-}
-
-void monitorTemperature(const std::string &wifiSsid, const std::string wifiPassword,
-                        const std::string &mqttBrokerAddress, uint16_t mqttBrokerPort) {
-  MqttClient client(mqttBrokerAddress, mqttBrokerPort, "pico-ds18x20-temp-sensor");
-
-  std::string name = "Pico DS18x20 Temperature Probe";
-  std::string haMqttPrefix = "homeassistant";
-
-  client.publish(getConfigTopic(name, haMqttPrefix), getConfigPayload(name, haMqttPrefix));
-
-  One_wire one_wire(17);
-  one_wire.init();
-  rom_address_t address{};
-  one_wire.single_device_read_rom(address);
-  one_wire.convert_temperature(address, true, false);
-  float temp = one_wire.temperature(address);
-
-  // rudimentary way of filtering out 85 c on startup
-  while (temp == 85) {
-    std::cout << "Reading 85!!" << std::endl;
-    sleep_ms(100);
-    one_wire.single_device_read_rom(address);
-    one_wire.convert_temperature(address, true, false);
-    temp = one_wire.temperature(address);
-  }
-
-  while (true) {
-    one_wire.single_device_read_rom(address);
-    one_wire.convert_temperature(address, true, false);
-    temp = one_wire.temperature(address);
-    if (temp != One_wire::invalid_conversion) {
-      client.publish(getStateTopic(name, haMqttPrefix), getStateJson(temp));
-    } else {
-      std::cerr << "Could not read temperature from ds18x20!" << std::endl;
-    }
-    watchdog_update();
-    sleep_ms(1000);
   }
 }
 
@@ -143,8 +53,13 @@ int main() {
     watchdog_enable(8000, false);
     std::cout << "Watchdog enabled" << std::endl;
 
-    // begin publishing temps!
-    monitorTemperature(DPM_WIFI_SSID, DPM_WIFI_PASSWORD, DPM_MQTT_BROKER_ADDR, DPM_MQTT_BROKER_PORT);
+    // TODO(Jon): fix mqtt client Id.. need to get the unique device Id from the sensor.. perhaps pull that func into
+    // main?
+    MqttClient mqttc(DPM_MQTT_BROKER_ADDR, DPM_MQTT_BROKER_PORT, "test-client-id");
+    DS18x20 sensor(&mqttc, DPM_DEVICE_NAME, DPM_HA_MQTT_PREFIX, DPM_GPIO_PIN);
+
+    // will block indefinitely
+    sensor.monitor();
   } catch (const std::exception &ex) {
     std::cerr << "Caught exception: " << ex.what() << std::endl;
   } catch (...) {

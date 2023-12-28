@@ -23,8 +23,16 @@
 #define DPM_MQTT_PUBLISH_TOPIC ""
 #endif
 
-#ifndef DPM_SENDOR_ID
-#define DPM_SENSOR_ID "1"
+#ifndef DPM_DEVICE_NAME
+#define DPM_DEVICE_NAME "DS18x20 Temperature Sensor"
+#endif
+
+#ifndef DPM_HA_MQTT_PREFIX
+#define DPM_HA_MQTT_PREFIX "homeassistant"
+#endif
+
+#ifndef DPM_GPIO_PIN
+#define DPM_GPIO_PIN 17
 #endif
 
 #endif  // CONFIG_H_
