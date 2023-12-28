@@ -11,7 +11,10 @@ RUN apt-get update && apt-get install -y \
   python3 \
   g++ \
   minicom \
+  python3-pip \
   && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install cpplint
 
 # Clone the Raspberry Pi Pico SDK repository
 # RUN git clone https://github.com/raspberrypi/pico-sdk.git

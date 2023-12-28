@@ -1,7 +1,7 @@
 {
     "C_Cpp.default.compilerPath": "/usr/bin/arm-none-eabi-gcc",
     "cmake.generator": "Unix Makefiles",
-    "C_Cpp.workspaceParsingPriority": "low",
+    "C_Cpp.loggingLevel": "Debug",
     "files.associations": {
         "iosfwd": "cpp",
         "string": "cpp",

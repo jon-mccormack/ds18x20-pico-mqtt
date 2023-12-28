@@ -4,7 +4,6 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/modules/pico-onewire/api",
-                "${workspaceFolder}/modules/HAMqttDevice/src",
                 "${workspaceFolder}/modules/pico-sdk/**",
                 "${workspaceFolder}/build/generated/pico_base",
                 "${workspaceFolder}/include"

@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_LWIPOPTS_H_
-#define _INCLUDE_LWIPOPTS_H_
+#ifndef LWIPOPTS_H_
+#define LWIPOPTS_H_
 
 // Common settings used in most of the pico_w examples
 // (see https://www.nongnu.org/lwip/2_1_x/group__lwip__opts.html for details)
@@ -19,7 +19,7 @@
 #define MEM_LIBC_MALLOC 0
 #endif
 // required for larger mqtt payloads
-#define MQTT_OUTPUT_RINGBUF_SIZE   1024
+#define MQTT_OUTPUT_RINGBUF_SIZE 1024
 #define MEM_ALIGNMENT 4
 #define MEM_SIZE 4000
 #define MEMP_NUM_TCP_SEG 32
@@ -87,6 +87,6 @@
 #define PPP_DEBUG LWIP_DBG_OFF
 #define SLIP_DEBUG LWIP_DBG_OFF
 #define DHCP_DEBUG LWIP_DBG_OFF
-#define MEMP_NUM_SYS_TIMEOUT            (LWIP_NUM_SYS_TIMEOUT_INTERNAL+1)
+#define MEMP_NUM_SYS_TIMEOUT (LWIP_NUM_SYS_TIMEOUT_INTERNAL + 1)
 
-#endif // _INCLUDE_LWIPOPTS_H_
+#endif  // LWIPOPTS_H_

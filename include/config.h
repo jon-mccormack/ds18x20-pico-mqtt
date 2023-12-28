@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_CONFIG_H_
-#define _INCLUDE_CONFIG_H_
+#ifndef CONFIG_H_
+#define CONFIG_H_
 
 // The following should be overridden by CMake build config
 
@@ -27,5 +27,4 @@
 #define DPM_SENSOR_ID "1"
 #endif
 
-
-#endif // _INCLUDE_CONFIG_H_
+#endif  // CONFIG_H_
