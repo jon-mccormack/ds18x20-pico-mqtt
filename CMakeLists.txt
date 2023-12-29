@@ -6,10 +6,13 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
 # Reference Pico CMake config
-include($ENV{PICO_SDK_PATH}/pico_sdk_init.cmake)
+if (DEFINED ENV{PICO_SDK_PATH})
+    SET (PICO_SDK_PATH "$ENV{PICO_SDK_PATH}")
+endif()
+include(${PICO_SDK_PATH}/pico_sdk_init.cmake)
 
 # Define project
-project(ds18x20-pico-mqtt VERSION 0.1.0)
+project(ds18x20-pico-mqtt VERSION 0.1.0 LANGUAGES CXX C ASM)
 
 # Apply project config from Pico
 pico_sdk_init()
@@ -58,7 +61,7 @@ file (GLOB_RECURSE SRC "src/*.cpp")
 # Add source files to project
 add_executable(${PROJECT_NAME}
     ${SRC}
-    $ENV{PICO_SDK_PATH}/lib/lwip/src/apps/mqtt/mqtt.c
+    ${PICO_SDK_PATH}/lib/lwip/src/apps/mqtt/mqtt.c
 )
 
 # Headers

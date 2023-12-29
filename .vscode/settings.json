@@ -2,11 +2,6 @@
     "C_Cpp.default.compilerPath": "/usr/bin/arm-none-eabi-gcc",
     "cmake.generator": "Unix Makefiles",
     "C_Cpp.loggingLevel": "Debug",
-    "C_Cpp.files.exclude": {
-        "**/.vscode": true,
-        "**/.vs": true,
-        "modules/**": true
-    },
     "editor.tabSize": 2,
     "files.associations": {
         "iosfwd": "cpp",
@@ -58,6 +53,11 @@
         "cstdbool": "cpp",
         "map": "cpp",
         "set": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "chrono": "cpp",
+        "condition_variable": "cpp",
+        "ratio": "cpp",
+        "mutex": "cpp",
+        "thread": "cpp"
     }
 }

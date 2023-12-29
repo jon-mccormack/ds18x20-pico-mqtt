@@ -5,6 +5,7 @@ readings in a Home Assistant-friendly format.
 
 ## Features
 
+- Support for the Raspberry Pi Pico W.
 - Publishes temperature readings from a DS18x20 sensor in a Home
 Assistant-friendly format at a rate of 1Hz.
 
@@ -16,11 +17,10 @@ Ensure Git submodules are resolved.
 git submodule update --recursive --init
 ```
 
-Install build-time prerequisites.
+Install build-time dependencies.
 
 ```bash
-sudo apt-get update
-sudo apt-get install -y build-essential <TODO>
+apt-get install -y cmake python3 gcc-arm-none-eabi g++
 ```
 
 Now you're ready to start building the project.
@@ -28,12 +28,21 @@ Now you're ready to start building the project.
 ## Building
 
 Run the following to build the project, ensuring you update the config options
-`<ssid>` and `<password>` to suit your setup.
+to suit your setup.
 
 ```bash
 mkdir build
 cd build
-cmake -DWIFI_SSID=<ssid> -DWIFI_PASSWORD=<password> ..
+cmake \
+  -DPICO_SDK_PATH="modules/pico-sdk" \
+  -DWIFI_SSID="network ssid" \
+  -DWIFI_PASSWORD="network password" \
+  -DMQTT_BROKER_ADDRESS="192.168.1.2" \
+  -DMQTT_BROKER_PORT=1883 \
+  -DDEVICE_NAME="Pico DS18x20 Temperature Probe" \
+  -DHA_MQTT_PREFIX="homeassistant" \
+  -DGPIO_PIN=17 \
+  ..
 cmake --build .
 ```
 
@@ -53,7 +62,7 @@ You can use USB Serial (minicom) to view the standard output of the app
 running on the Pico. Run `minicom -b 115200 -o -D /dev/ttyACM0` from the
 host that the Pico is connected to and you should start seeing the logs.
 Note, minicom must be installed for this to work
-(`sudo apt-get install minicom`).
+(`apt-get install -y minicom`).
 
 ## VS Code Dev Container
 
