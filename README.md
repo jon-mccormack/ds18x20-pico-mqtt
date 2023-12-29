@@ -9,7 +9,12 @@ readings in a Home Assistant-friendly format.
 - Publishes temperature readings from a DS18x20 sensor in a Home
 Assistant-friendly format at a rate of 1Hz.
 
-## Getting Started
+## Getting Started (Hardware)
+
+TODO(Jon). Some nice pics of the ginished product, and the wiring diagram
+would be nice.
+
+## Getting Started (Software)
 
 Ensure Git submodules are resolved.
 
@@ -50,9 +55,9 @@ The binaries will now be available in the `/build` directory.
 
 ## Running
 
-To run the project, copy the built `ds18x20-pico-mqtt.uf2` (in the `/build` directory)
-binary over to your Pico; ensure your Pico is in USB Mass Storage mode by holding the
-`BOOTSEL` button when powering up.
+To run the project, copy the built `ds18x20-pico-mqtt.uf2` (in the `/build`
+directory) binary over to your Pico; ensure your Pico is in USB Mass Storage
+mode by holding the `BOOTSEL` button when powering up.
 
 The Pico will run the binary once it restarts.
 
@@ -66,16 +71,18 @@ Note, minicom must be installed for this to work
 
 ## VS Code Dev Container
 
-There are pre-configured `.devcontainer` and `.vscode` directories committed to
-this repo which should make setting up the development environment really easy.
+There are pre-configured `.devcontainer` and `.vscode` directories committed
+to this repo which should make setting up the development environment really
+easy.
 
-_Note: when building the Dev Container, your Pico must be connected! This is because
-the `/dev/ttyACM0` device is forwarded to the container - so creating the container
-will fail if its unreachable._
+_Note: when building the Dev Container, your Pico must be connected! This is
+because the `/dev/ttyACM0` device is forwarded to the container - so creating
+the container will fail if its unreachable._
 
 Config options that the CMake build task needs access to are defined in the
-`.env.sh.example` file. Duplicate that file with the new name `env.sh` and enter
-your config within and it should be used by the built binaries from then onwards.
+`.env.sh.example` file. Duplicate that file with the new name `env.sh` and
+enter your config within and it should be used by the built binaries from then
+onwards.
 
 Run the VS Code build command (`ctrl+shift+b`) or run the "Build" custom task.
 The binaries will now be available in the `/build` directory. You can copy
