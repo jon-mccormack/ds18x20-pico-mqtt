@@ -2,41 +2,33 @@
 
 #include <iostream>
 #include <sstream>
+#include <tuple>
 
 #include "config.h"
 #include "lwip/arch.h"
 #include "pico/cyw43_arch.h"
 
-// TODO(Jon): i'm not sure how useful these LWIP-specific macro-function calls are, maybe replace with std::ignore and
-// std::cout?
-
 static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags) {
   const struct mqtt_connect_client_info_t *client_info = (const struct mqtt_connect_client_info_t *)arg;
-  LWIP_UNUSED_ARG(data);
-
-  LWIP_PLATFORM_DIAG(("MQTT client \"%s\" data cb: len %d, flags %d\n", client_info->client_id, static_cast<int>(len),
-                      static_cast<int>(flags)));
+  std::ignore = data;
+  std::cout << "MQTT Client " << client_info->client_id << " data cb: len: " << static_cast<int>(len)
+            << ", flags: " << static_cast<int>(flags) << std::endl;
 }
 
 static void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len) {
   const struct mqtt_connect_client_info_t *client_info = (const struct mqtt_connect_client_info_t *)arg;
-  LWIP_PLATFORM_DIAG(
-      ("MQTT client \"%s\" publish cb: topic %s, len %d\n", client_info->client_id, topic, static_cast<int>(tot_len)));
+  std::cout << "MQTT Client " << client_info->client_id << " request cb: topic " << topic
+            << ", len: " << static_cast<int>(tot_len) << std::endl;
 }
 
 void mqtt_request_cb(void *arg, err_t err) {
   const struct mqtt_connect_client_info_t *client_info = (const struct mqtt_connect_client_info_t *)arg;
-  LWIP_PLATFORM_DIAG(("MQTT client \"%s\" request cb: err %d\n", client_info->client_id, static_cast<int>(err)));
+  std::cout << "MQTT Client " << client_info->client_id << " request cb: err " << static_cast<int>(err) << std::endl;
 }
 
 static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t status) {
   const struct mqtt_connect_client_info_t *client_info = (const struct mqtt_connect_client_info_t *)arg;
-  LWIP_UNUSED_ARG(client);
-
-  // this gets called when we lose connection to the MQTT client! any subsequent publish calls will return a fail
-  // (non-zero) status
-  LWIP_PLATFORM_DIAG(
-      ("MQTT client \"%s\" connection cb: status %d\n", client_info->client_id, static_cast<int>(status)));
+  std::ignore = client;
 
   if (status != MQTT_CONNECT_ACCEPTED) {
     std::cerr << "Mqtt connection not accepted :(" << std::endl;
@@ -65,8 +57,8 @@ void mqtt_pub_request_cb(void *arg, err_t err) {
 
 ip_addr_t getAddress(const std::string &ip) {
   std::stringstream s(ip);
-  int a, b, c, d;  // to store the 4 ints
-  char ch;         // to temporarily store the '.'
+  int a, b, c, d;
+  char ch;
   s >> a >> ch >> b >> ch >> c >> ch >> d;
   ip_addr_t broker;
   IP4_ADDR(&broker, a, b, c, d);
