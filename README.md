@@ -90,3 +90,7 @@ the built binary over to the Pico in the same way as mentioned above.
 
 You can also run the task "Monitor Pico's USB serial output" to monitor the
 standard output of the Pico when its running (and connected!).
+
+## Changelog
+
+See [CHANGELOG.md](/CHANGELOG.md).
