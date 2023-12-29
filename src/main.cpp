@@ -12,7 +12,6 @@
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 
-// forward declerations
 std::string getUniqueId(const std::string &name);
 void connectToWifi(const std::string &ssid, const std::string &password);
 void setupCyw43();
@@ -22,17 +21,10 @@ int main() {
   sleep_ms(5000);
   std::cout << std::endl;
 
-  if (watchdog_caused_reboot()) {
-    std::cout << "Rebooted by Watchdog" << std::endl;
-  } else {
-    std::cout << "Clean boot" << std::endl;
-  }
-
   try {
-    // prepate cyw43 chip for Wifi
+    // setup cyw43 chip for Wifi
     setupCyw43();
 
-    // connect to wifi
     connectToWifi(DPM_WIFI_SSID, DPM_WIFI_PASSWORD);
 
     // enable watchdog, so if for any reason the program fails to check-in with

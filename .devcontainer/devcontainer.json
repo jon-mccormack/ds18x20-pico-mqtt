@@ -10,7 +10,8 @@
                 "ms-vscode.cpptools",
                 "ms-vscode.cmake-tools",
                 "ms-vscode.cpptools-extension-pack",
-                "mine.cpplint"
+                "mine.cpplint",
+                "DavidAnson.vscode-markdownlint"
             ]
         },
         "settings": {

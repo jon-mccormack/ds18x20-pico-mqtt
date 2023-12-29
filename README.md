@@ -3,6 +3,11 @@
 An MQTT client for the Pico W that publishes DS18x20 temperature
 readings in a Home Assistant-friendly format.
 
+## Features
+
+- Publishes temperature readings from a DS18x20 sensor in a Home
+Assistant-friendly format at a rate of 1Hz.
+
 ## Getting Started
 
 Ensure Git submodules are resolved.
@@ -40,7 +45,7 @@ To run the project, copy the built `ds18x20-pico-mqtt.uf2` (in the `/build` dire
 binary over to your Pico; ensure your Pico is in USB Mass Storage mode by holding the
 `BOOTSEL` button when powering up.
 
-The Pico will run the binary once it restarts. 
+The Pico will run the binary once it restarts.
 
 ## Debugging
 
@@ -48,7 +53,7 @@ You can use USB Serial (minicom) to view the standard output of the app
 running on the Pico. Run `minicom -b 115200 -o -D /dev/ttyACM0` from the
 host that the Pico is connected to and you should start seeing the logs.
 Note, minicom must be installed for this to work
-(`sudo apt-get install minicom`). 
+(`sudo apt-get install minicom`).
 
 ## VS Code Dev Container
 
