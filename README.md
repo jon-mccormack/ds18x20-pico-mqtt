@@ -28,8 +28,6 @@ Install build-time dependencies.
 apt-get install -y cmake python3 gcc-arm-none-eabi g++
 ```
 
-Now you're ready to start building the project.
-
 ## Building
 
 Run the following to build the project, ensuring you update the config options
@@ -51,7 +49,7 @@ cmake \
 cmake --build .
 ```
 
-The binaries will now be available in the `/build` directory.
+The binaries will now be available in the `/build` directory!
 
 ## Running
 
