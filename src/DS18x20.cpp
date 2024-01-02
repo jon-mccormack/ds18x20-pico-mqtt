@@ -90,6 +90,7 @@ void DS18x20::monitor() {
     } else {
       std::cerr << "Could not read temperature from ds18x20!" << std::endl;
     }
+    // should de-couple watchdog from this class! could pass a callback to to DS18x20's constructor to call instead
     watchdog_update();
     sleep_ms(1000);
   }
