@@ -1,5 +1,0 @@
-export WIFI_SSID=""
-export WIFI_PASSWORD=""
-export MQTT_BROKER_ADDRESS=""
-
-#TODO rename to env.sh, add compiler path with default and reference it in settings and cpp vscode config file

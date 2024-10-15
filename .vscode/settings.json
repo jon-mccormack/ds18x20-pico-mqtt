@@ -1,4 +1,6 @@
 {
     "C_Cpp.default.compilerPath": "/usr/bin/arm-none-eabi-gcc",
-    "cmake.generator": "Unix Makefiles"
+    "cmake.generator": "Unix Makefiles",
+    "C_Cpp.loggingLevel": "Debug",
+    "editor.tabSize": 2
 }
